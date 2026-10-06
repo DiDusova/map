@@ -1,0 +1,27 @@
+<!doctype html>
+<html lang="ru"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+<title>QR-код карты</title><link rel="icon" href="favicon.svg" type="image/svg+xml"><link rel="stylesheet" href="assets/fonts.css">
+<style>
+body{margin:0;min-height:100vh;display:flex;align-items:center;justify-content:center;background:#f4f2ec;color:#1c1e21;font-family:Manrope,system-ui,sans-serif}
+.box{text-align:center;padding:24px;max-width:640px}
+h1{font-size:clamp(24px,4vw,40px);margin:0 0 8px;font-weight:800}
+p{color:#5d636b;margin:0 0 18px;font-size:18px}
+#qr{background:#fff;padding:24px;border-radius:20px;display:inline-block;box-shadow:0 8px 30px rgba(0,0,0,.08)}
+#qr svg{width:min(70vw,60vh);height:auto;display:block}
+.url{margin-top:16px;font-size:18px;font-weight:700;word-break:break-all}
+.tools{margin-top:22px;display:flex;gap:8px;justify-content:center;flex-wrap:wrap}
+input{padding:9px 12px;border:1px solid #dcd7cb;border-radius:10px;font:inherit;width:320px;max-width:80vw}
+button{padding:9px 14px;border:1px solid #dcd7cb;border-radius:10px;background:#fff;font:inherit;font-weight:700;cursor:pointer}
+@media print{.tools{display:none}body{background:#fff}#qr{box-shadow:none}}
+</style></head><body><div class="box">
+<h1>Карта возможностей ИИ</h1><p>Наведите камеру телефона на код</p>
+<div id="qr"></div><div class="url" id="url"></div>
+<div class="tools"><input id="in" placeholder="Другой адрес, если нужен"><button id="go">Обновить</button><button id="dl">Скачать SVG</button><button onclick="print()">Печать</button></div>
+</div>
+<script src="assets/qrcode.js"></script>
+<script>
+function draw(u){var q=qrcode(0,'M');q.addData(u);q.make();var s=q.createSvgTag({cellSize:8,margin:2,scalable:true});document.getElementById('qr').innerHTML=s;document.getElementById('url').textContent=u.replace(/^https?:\/\//,'');}
+var base=location.href.replace(/qr\.html.*$/,'');var u=new URLSearchParams(location.search).get('u')||base;draw(u);
+document.getElementById('go').onclick=function(){var v=document.getElementById('in').value.trim();if(v){if(!/^https?:/.test(v))v='https://'+v;u=v;draw(u);}};
+document.getElementById('dl').onclick=function(){var b=new Blob([document.querySelector('#qr svg').outerHTML],{type:'image/svg+xml'});var a=document.createElement('a');a.href=URL.createObjectURL(b);a.download='qr-karta-ii.svg';a.click();};
+</script></body></html>
